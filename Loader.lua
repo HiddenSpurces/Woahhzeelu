@@ -1,13 +1,106 @@
---- Open Sourced
---- Only the loader is open sourced lol
-
-
 if getgenv().ngaaa then
     warn("already executed [Zilu]")
     return
 end
-loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/assets/loadingscreen.lua"))()
-wait(2.5)
+function loading()
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local black = Instance.new("Frame")
+black.Size = UDim2.fromScale(1, 1)
+black.BackgroundColor3 = Color3.new(0, 0, 0)
+black.BackgroundTransparency = 1
+black.BorderSizePixel = 0
+black.Parent = gui
+
+local container = Instance.new("Frame")
+container.AnchorPoint = Vector2.new(0.5, 0.5)
+container.Position = UDim2.fromScale(0.5, 0.5)
+container.BackgroundTransparency = 1
+container.Parent = black
+
+TweenService:Create(
+	black,
+	TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+	{BackgroundTransparency = 0.4}
+):Play()
+
+task.wait(0.5)
+
+local text = "Zilu Hub"
+
+local letterWidth = 48
+local spacing = 0
+
+local startColor = Color3.fromRGB(255,255,255)
+local endColor = Color3.fromRGB(134,134,2)
+
+local totalWidth = (#text * letterWidth) + ((#text - 1) * spacing)
+local startX = -totalWidth / 2
+
+for i = 1, #text do
+	local char = text:sub(i, i)
+
+	local alpha = (#text <= 1) and 0 or ((i - 1) / (#text - 1))
+	local color = startColor:Lerp(endColor, alpha)
+
+	local letter = Instance.new("TextLabel")
+	letter.BackgroundTransparency = 1
+	letter.Size = UDim2.fromOffset(letterWidth, 80)
+	letter.AnchorPoint = Vector2.new(0.5, 0.5)
+	letter.Text = char
+	letter.Font = Enum.Font.GothamBold
+	letter.TextScaled = true
+	letter.TextColor3 = color
+	letter.TextTransparency = 1
+	letter.Parent = container
+
+	local targetX = startX + (i - 0.5) * (letterWidth + spacing)
+
+	letter.Position = UDim2.fromScale(0.5, 0.5) + UDim2.fromOffset(targetX - 30, 0)
+
+	TweenService:Create(
+		letter,
+		TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+		{
+			Position = UDim2.fromScale(0.5, 0.5) + UDim2.fromOffset(targetX, 0),
+			TextTransparency = 0
+		}
+	):Play()
+
+	task.wait(0.05)
+end
+
+task.wait(1)
+
+local fadeBlack = TweenService:Create(
+	black,
+	TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+	{BackgroundTransparency = 1}
+)
+
+for _, v in ipairs(container:GetChildren()) do
+	if v:IsA("TextLabel") then
+		TweenService:Create(
+			v,
+			TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{TextTransparency = 1}
+		):Play()
+	end
+end
+
+fadeBlack:Play()
+fadeBlack.Completed:Wait()
+gui:Destroy()
+end
+
 local Gui = Instance.new("ScreenGui")
 Gui.Name           = "wtfLoad"
 Gui.ResetOnSpawn   = false
@@ -190,12 +283,24 @@ function notify(Config)
 end
 
 if game.PlaceId == 97598239454123 then
+loading()
+wait(3)
 notify({
 	Title = "Game Found!",
 	Desc = "Loading Grow a Garden 2...",
 	Time = 2,
 })
+--topbar
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/assets/topbar.lua"))()
+--anti scam msg
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/assets/warningmsg.lua"))()
+---auto updater
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/assets/autoupdater.lua"))()
+-----
 loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/games/Backup.lua"))()
+wait(30)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HiddenSpurces/Woahhzeelu/refs/heads/main/assets/discordjoiner.lua"))()
+
 else
 notify({
 	Title = "Game not Supported",
