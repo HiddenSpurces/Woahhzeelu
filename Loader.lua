@@ -190,8 +190,6 @@ function notify(Config)
 end
 
 if game.PlaceId == 97598239454123 then
-loading()
-wait(3)
 notify({
 	Title = "Game Found!",
 	Desc = "Loading Grow a Garden 2...",
